@@ -75,7 +75,7 @@
                                     <li><a href="{{ route('checkout.index') }}">My Checkout</a></li>
                                     @endauth
                                     @guest
-                                    <li><a href="{{ route('user.auth.login') }}"><i class="icon-user"></i>Login</a></li>
+                                    <li><a href="{{ route('user.auth.index') }}"><i class="icon-user"></i>Login</a></li>
                                     @endguest
                                 </ul>
                             </li>
