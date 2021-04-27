@@ -5,9 +5,6 @@ namespace App\DataTables;
 use App\Models\Item;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
-use Yajra\DataTables\Services\DataTable;
 
 class ItemsDataTable extends GCDataTable implements GCDataTableContract
 {
@@ -21,7 +18,19 @@ class ItemsDataTable extends GCDataTable implements GCDataTableContract
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'items.action');
+            ->editColumn('main_image', function ($data) {
+                return '<img class="img-fluid" style="height: 200px" src="' . asset('storage/' . $data->main_image->url) . '">';
+            })
+            ->editColumn('created_at', function ($data) {
+                return $data->created_at->isoFormat('LLL');
+            })
+            ->editColumn('updated_at', function ($data) {
+                return $data->created_at->isoFormat('LLL');
+            })
+            ->addColumn('action', function ($item) {
+                return view('admin.items.action', compact('item'));
+            })
+            ->rawColumns(['main_image']);
     }
 
     /**
@@ -32,7 +41,7 @@ class ItemsDataTable extends GCDataTable implements GCDataTableContract
      */
     public function query(Item $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('main_image');
     }
 
     /**
@@ -44,7 +53,7 @@ class ItemsDataTable extends GCDataTable implements GCDataTableContract
     {
         return $this->builder()
                     ->setTableId('items-table')
-                    ->orderBy(1)
+                    ->orderBy(0)
                     ->buttons(
                         Button::make('export'),
                         Button::make('print'),
@@ -61,10 +70,22 @@ class ItemsDataTable extends GCDataTable implements GCDataTableContract
     public function getColumns(): array
     {
         return [
-            Column::make('id'),
-            Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
+            Column::make('id')
+                ->title('#')
+                ->width('1%')
+                ->className('no-vis no-wrap'),
+            Column::computed('main_image', 'Thumbnail'),
+            Column::make('name'),
+            Column::make('price'),
+            Column::make('created_at')
+                ->width('1%')
+                ->className('no-vis no-wrap'),
+            Column::make('updated_at')
+                ->width('1%')
+                ->className('no-vis no-wrap'),
+            Column::computed('action', '')
+                ->width('1%')
+                ->className('no-vis no-wrap'),
         ];
     }
 

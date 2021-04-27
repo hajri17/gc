@@ -281,6 +281,8 @@ return [
 
         'except' => [
             'migrations',
+            'failed_jobs',
+            'password_resets',
         ],
 
         /*

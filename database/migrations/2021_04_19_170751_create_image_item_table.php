@@ -15,8 +15,8 @@ class CreateImageItemTable extends Migration
     {
         Schema::create('image_item', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Image::class)->constrained();
-            $table->foreignIdFor(\App\Models\Item::class)->constrained();
+            $table->foreignIdFor(\App\Models\Image::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Item::class)->constrained()->cascadeOnDelete();
         });
     }
 

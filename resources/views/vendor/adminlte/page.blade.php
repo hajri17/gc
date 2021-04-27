@@ -11,6 +11,11 @@
 @section('adminlte_css')
     @stack('css')
     @yield('css')
+    <style>
+        .no-wrap {
+            white-space: nowrap;
+        }
+    </style>
 @stop
 
 @section('classes_body', $layoutHelper->makeBodyClasses())
@@ -67,4 +72,26 @@
 @section('adminlte_js')
     @stack('js')
     @yield('js')
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        $('.select2').select2({
+            theme: 'bootstrap4',
+        });
+
+        @if(session('success') || session('failed'))
+            $(function () {
+                let status = '{{ session('success') ? 'success' : 'failed' }}';
+                let message = '{{ session('success') ?? session('failed') ?? '' }}';
+
+                Swal.fire({
+                    title: status === 'success' ? 'Success' : 'Failed',
+                    text: message,
+                    icon: status === 'success' ? 'success' : 'error',
+                });
+            });
+        @endif
+    </script>
 @stop
