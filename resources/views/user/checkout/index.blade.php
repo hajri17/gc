@@ -81,7 +81,7 @@
                                              @elseif($transaction->accepted_at)
                                                  <div>Status: DONE</div>
                                                  <div>Received at: {{ $transaction->accepted_at->isoFormat('LLLL') }}</div>
-                                                 @if(!$transaction->reviews)
+                                                 @if(!$transaction->reviews->isEmpty())
                                                     <a href="{{ route('review.create', $transaction->id) }}" class="btn btn-primary mt-1 btn-quickview btn-review" title="Review">Review</a>
                                                  @else
                                                      REVIEWED
@@ -125,7 +125,10 @@
                                     <tr>
                                         <td colspan="3"></td>
                                         <td class="total-col">
-                                            Rp{{ number_format($transaction->transaction_details->sum('item.price') + $transaction->shipping_method->price_per_kg, 0, ',', '.') }}
+                                            Rp{{ number_format($transaction->transaction_details
+                                                    ->sum(function ($td) {
+                                                        return $td->item->price * $td->qty;
+                                                    }) + $transaction->shipping_method->price_per_kg, 0, ',', '.') }}
                                         </td>
                                     </tr>
                                     </tbody>
