@@ -131,7 +131,7 @@ class ItemController extends Controller
         return redirect()
             ->route('admin.items.index')
             ->with([
-                'success' => 'Item added successfully',
+                'success' => 'Item updated successfully',
                 'id' => $item->id,
             ]);
     }

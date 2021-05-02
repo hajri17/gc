@@ -28,7 +28,7 @@ class ItemEditRequest extends FormRequest
             'price' => ['required', 'numeric'],
             'description' => ['nullable', 'string'],
             'category_id' => ['required', 'numeric', 'exists:categories,id'],
-            'main_image' => ['required', 'file', 'image', 'mimes:jpg,jpeg,png,gif,bpm,webp'],
+            'main_image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,gif,bpm,webp'],
             'images' => ['array'],
             'images.*' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,gif,bpm,webp'],
         ];
