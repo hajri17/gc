@@ -81,7 +81,7 @@
                                              @elseif($transaction->accepted_at)
                                                  <div>Status: DONE</div>
                                                  <div>Received at: {{ $transaction->accepted_at->isoFormat('LLLL') }}</div>
-                                                 @if(!$transaction->reviews->isEmpty())
+                                                 @if($transaction->reviews->isEmpty())
                                                     <a href="{{ route('review.create', $transaction->id) }}" class="btn btn-primary mt-1 btn-quickview btn-review" title="Review">Review</a>
                                                  @else
                                                      REVIEWED
