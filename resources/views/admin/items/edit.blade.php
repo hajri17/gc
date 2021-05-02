@@ -80,7 +80,7 @@
 @section('content')
     <form class="card" action="{{ route('admin.items.update', $item->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @method('POST')
+        @method('PUT')
         <div class="card-body form-horizontal">
             <div class="form-group row">
                 <label for="main_image" class="{{ $lcc }} col-form-label">Upload main image</label>
