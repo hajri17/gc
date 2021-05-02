@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAnotherExtraColumnToTransactionsTable extends Migration
+class AdjustColumnFromTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,8 @@ class AddAnotherExtraColumnToTransactionsTable extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->string('address')->nullable()->after('id');
-            $table->string('name')->nullable()->after('id');
-            $table->string('phone')->nullable()->after('id');
-            $table->string('email')->nullable()->after('id');
+            $table->foreignId('shipping_method_id')->after('user_id')->constrained()->cascadeOnDelete();
+            $table->string('proof')->nullable()->after('id');
         });
     }
 
@@ -29,7 +27,8 @@ class AddAnotherExtraColumnToTransactionsTable extends Migration
     public function down()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn(['shipping', 'address']);
+            $table->dropForeign(['shipping_method_id']);
+            $table->dropColumn(['shipping_method_id', 'proof']);
         });
     }
 }

@@ -245,11 +245,11 @@ return [
             'url'  => 'admin/categories',
             'icon' => 'fas fa-fw fa-list',
         ],
-        [
+        /*[
             'text' => 'reviews',
             'url'  => 'admin/reviews',
             'icon' => 'fas fa-fw fa-star',
-        ],
+        ],*/
         ['header' => 'transactions'],
         [
             'text' => 'all_transactions',

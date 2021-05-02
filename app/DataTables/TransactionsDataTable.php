@@ -22,15 +22,33 @@ class TransactionsDataTable extends GCDataTable implements GCDataTableContract
         return datatables()
             ->eloquent($query)
             ->editColumn('created_at', function ($data) {
-                return $data->created_at->isoFormat('LLL');
+                return $data->created_at->isoFormat('DD/MM/YYYY HH:mm');
+            })
+            ->editColumn('updated_at', function ($data) {
+                return $data->updated_at->isoFormat('DD/MM/YYYY HH:mm');
             })
             ->editColumn('status', function ($data) {
-                if ($data->paid_at) {
-                    return '<div class="badge badge-primary">Paid</div>';
-                }
-
                 if ($data->is_canceled) {
                     return '<div class="badge badge-danger">Canceled</div>';
+                }
+
+                if ($data->accepted_at) {
+                    return '<div class="badge badge-success">Done</div>';
+                }
+
+                if (!$data->paid_at && $data->proof) {
+                    $html = '<button data-url="' . $data->proof . '" data-toggle="modal" data-target="#proof-modal" class="btn btn-primary badge badge-primary">
+                        <i class="fa fa-eye mr-1"></i>Payment proof uploaded
+                    </button>';
+                    return $html;
+                }
+
+                if ($data->paid_at && !$data->shipped_at) {
+                    return '<div class="badge badge-success">Paid</div>';
+                }
+
+                if ($data->shipped_at) {
+                    return '<div class="badge badge-info">Shipped</div>';
                 }
 
                 return '<div class="badge badge-warning">Unpaid</div>';
@@ -87,6 +105,9 @@ class TransactionsDataTable extends GCDataTable implements GCDataTableContract
             Column::make('address'),
             Column::make('status'),
             Column::make('created_at')
+                ->width('1%')
+                ->className('no-vis no-wrap'),
+            Column::make('updated_at')
                 ->width('1%')
                 ->className('no-vis no-wrap'),
             Column::computed('action', '')

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\ShippingMethod;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
@@ -15,34 +16,14 @@ class CheckoutController extends Controller
 {
     public function index()
     {
-        $transaction = Transaction::with(
+        $transactions = Transaction::with(
                 'transaction_details.item',
             )
             ->where('user_id', auth()->id())
-            ->whereNull('paid_at')
-            ->first();
+            ->latest('updated_at')
+            ->get();
 
-        $total = 0;
-        $shippingCost = 0;
-
-        if ($transaction) {
-            switch ($transaction->shipping) {
-                case 'Free Shipping':
-                    $shippingCost = 0;
-                    break;
-                case 'Express Shipping':
-                    $shippingCost = 34000;
-                    break;
-                default:
-                    $shippingCost = 12000;
-            }
-
-            $total = $transaction->transaction_details->sum(function ($td) {
-                return $td->item->price * $td->qty;
-            });
-        }
-
-        return view('user.checkout.index', compact('transaction', 'total', 'shippingCost'));
+        return view('user.checkout.index', compact('transactions'));
     }
 
     public function create(Request $request)
@@ -59,24 +40,19 @@ class CheckoutController extends Controller
         }
 
         $user = Auth::user();
-        $shippingCost = 0;
-        $shipping = $request->query('shipping-option');
+        $shipping = ShippingMethod::query()
+            ->where('name', $request->query('shipping-option'))
+            ->first();
 
-        switch ($shipping) {
-            case 'free-shipping':
-                $shippingCost = 0;
-                break;
-            case 'express-shipping':
-                $shippingCost = 34000;
-                break;
-            default:
-                $shippingCost = 12000;
+        if (!$shipping) {
+            return redirect()->back();
         }
 
         $cartTotal = $carts->sum(function ($s) {
             return $s->qty * $s->item->price;
         });
-        $total = $cartTotal + $shippingCost;
+
+        $total = $cartTotal + $shipping->price_per_kg;
 
 
         return view('user.checkout.create', compact('shipping', 'user', 'total'));
@@ -93,7 +69,7 @@ class CheckoutController extends Controller
             'phone' => 'required|string|numeric|digits_between:8,16',
             'email' => 'required|string|email|min:1|max:255',
             'description' => 'nullable|string|min:1|max:255',
-            'shipping' => 'required|string',
+            'shipping_method_id' => 'required|numeric|exists:shipping_methods,id',
         ]);
 
         $address = $validated['address-1'];

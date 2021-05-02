@@ -24,15 +24,56 @@
             {{ $dataTable->table() }}
         </div>
     </div>
-    {{--<form id="categories-delete" action="" method="POST">
-        @csrf
-        @method('DELETE')
-    </form>--}}
+    <div class="modal fade" id="proof-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered d-flex justify-content-center align-items-center" role="document">
+            <div class="inner-modal">
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ship-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form class="modal-content" id="ship-form" action="{{ \Session::has('transaction_id') ? route('admin.transactions.ship', \Session::get('transaction_id')) : '' }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="shipping_number">Shipping Number</label>
+                        <input class="form-control @error('shipping_number') is-invalid @enderror" id="shipping_number" type="text" name="shipping_number" value="{{ old('shipping_number') }}" required>
+                        @error('shipping_number')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
 @stop
 
 @section('js')
     {{ $dataTable->scripts() }}
     <script>
+        $(function () {
+            $('#proof-modal').on('show.bs.modal', function (event) {
+                let url = $(event.relatedTarget).data('url');
+                let img = $(`<img src="/storage/${url}" alt="Proof preview" />`);
+
+                $('#proof-modal .inner-modal').html(img);
+            });
+
+            @if(!$errors->has('shipping_number'))
+                $('#ship-modal').on('show.bs.modal', function (event) {
+                    let action = $(event.relatedTarget).data('action');
+
+                    $('#ship-form').attr('action', action);
+                });
+            @else
+                $('#ship-modal').modal('show');
+            @endif
+        });
         /*$(document).on('click', '.categories-delete-btn', function () {
             let action = $(this).data('action');
             let form = $('#categories-delete');

@@ -9,6 +9,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * Class Item
@@ -28,6 +29,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Item extends Model
 {
+    use HasRelationships;
+
 	protected $table = 'items';
 
 	protected $casts = [
@@ -61,4 +64,12 @@ class Item extends Model
     {
         return $this->hasMany(Review::class);
 	}
+
+    /*public function reviews()
+    {
+        return $this->hasManyDeep(
+            Review::class,
+            ['transaction_details', Transaction::class],
+        );
+	}*/
 }

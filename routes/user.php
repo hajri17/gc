@@ -4,6 +4,8 @@ use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\CategoryController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\User\ProductController;
+use App\Http\Controllers\User\ReviewController;
+use App\Http\Controllers\User\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -35,5 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkouts', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
+    Route::get('/review/{transaction}', [ReviewController::class, 'create'])->name('review.create');
+    Route::post('/review/{transaction}', [ReviewController::class, 'store'])->name('review.store');
+
+    Route::post('/transaction/{transaction}/confirm', [TransactionController::class, 'confirm'])->name('transaction.confirm');
+    Route::post('/transaction/{transaction}/accept', [TransactionController::class, 'accept'])->name('transaction.accept');
 });
 

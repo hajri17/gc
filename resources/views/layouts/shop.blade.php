@@ -63,7 +63,9 @@
                             </div><!-- End .header-menu -->
                         </div><!-- End .header-dropdown -->
                     </div><!-- End .header-left -->
-
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
                     <div class="header-right">
                         <ul class="top-menu">
                             <li>
@@ -73,6 +75,7 @@
                                     <li><a href="about.html">About Us</a></li>
                                     @auth
                                     <li><a href="{{ route('checkout.index') }}">My Checkout</a></li>
+                                    <li><a href="#" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Log Out</a></li>
                                     @endauth
                                     @guest
                                     <li><a href="{{ route('user.auth.index') }}"><i class="icon-user"></i>Login</a></li>

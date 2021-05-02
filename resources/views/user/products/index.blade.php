@@ -53,12 +53,12 @@
                                         <img src="{{ asset('storage/' . $product->main_image->url) }}" alt="Product image" class="product-image">
                                     </a>
 
-                                    <div class="product-action-vertical">
+                                    {{--<div class="product-action-vertical">
                                         <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action -->
+                                    </div><!-- End .product-action -->--}}
 
                                     <div class="product-action action-icon-top">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                        <a href="#" data-item_id="{{ $product->id }}" class="btn-product btn-cart"><span>add to cart</span></a>
                                         <a href="{{ route('products.quick', $product->id) }}" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
                                         <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a>
                                     </div><!-- End .product-action -->
@@ -826,3 +826,22 @@
         </div><!-- End .container -->
     </div><!-- End .page-content -->
 @endsection
+
+@section('additional')
+    <form id="cart-form" class="d-none" action="{{ route('carts.store') }}" method="POST">
+        @csrf
+        <input type="hidden" name="item_id">
+        <input id="form-qty" type="hidden" name="qty" value="1">
+    </form>
+@stop
+
+@push('js')
+    <script>
+        $('.btn-cart').on('click', function () {
+            let item_id = $(this).data('item_id');
+
+            $('input[name="item_id"]').val(item_id);
+            $('#cart-form').submit();
+        });
+    </script>
+@endpush

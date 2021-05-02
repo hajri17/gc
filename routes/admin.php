@@ -15,9 +15,16 @@ Route::middleware('auth')->group(function () {
         Route::resource('categories', CategoryController::class);
 
         Route::resource('transactions', TransactionController::class);
-        Route::get('/transactions/{transaction}/paid', [TransactionController::class, 'paid'])
-            ->name('transactions.paid');
+        Route::get('/transactions/{transaction}/confirm', [TransactionController::class, 'confirm'])
+            ->name('transactions.confirm');
         Route::get('/transactions/{transaction}/cancel', [TransactionController::class, 'cancel'])
             ->name('transactions.cancel');
+        Route::get('/transactions/{transaction}/ship/edit', [TransactionController::class, 'editShip'])
+            ->name('transactions.ship.edit');
+
+        Route::post('/transactions/{transaction}/ship', [TransactionController::class, 'ship'])
+            ->name('transactions.ship');
+        Route::put('/transactions/{transaction}/ship/update', [TransactionController::class, 'updateShip'])
+            ->name('transactions.ship.update');
     });
 });

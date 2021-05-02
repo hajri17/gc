@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAnotherExtraColumnToTransactionsTable extends Migration
+class AddExtraColumnToTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,9 @@ class AddAnotherExtraColumnToTransactionsTable extends Migration
     public function up()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->string('address')->nullable()->after('id');
-            $table->string('name')->nullable()->after('id');
-            $table->string('phone')->nullable()->after('id');
-            $table->string('email')->nullable()->after('id');
+            $table->string('shipping_number')->nullable()->after('expiration_date');
+            $table->timestamp('shipped_at')->nullable()->after('paid_at');
+            $table->timestamp('accepted_at')->nullable()->after('paid_at');
         });
     }
 
@@ -29,7 +28,7 @@ class AddAnotherExtraColumnToTransactionsTable extends Migration
     public function down()
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn(['shipping', 'address']);
+            $table->dropColumn(['shipping_number', 'shipped_at', 'accepted_at']);
         });
     }
 }

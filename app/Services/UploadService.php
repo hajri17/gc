@@ -15,7 +15,7 @@ class UploadService
         $this->options = $options;
     }
 
-    protected function fileName(): string
+    public function fileName(): string
     {
         $name = uniqid();
         $name .= '_' . $this->file->getClientOriginalName();
@@ -42,5 +42,10 @@ class UploadService
         }
 
         return $image;
+    }
+
+    public function storeToDiskOnly(): string
+    {
+        return $this->file->storeAs('images', $this->fileName(), 'public');
     }
 }

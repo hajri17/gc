@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\ShippingMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -11,7 +12,9 @@ class CartController extends Controller
 {
     public function index()
     {
-        return view('user.others.cart');
+        $shippingMethods = ShippingMethod::all();
+
+        return view('user.others.cart', compact('shippingMethods'));
     }
 
     public function store(Request $request)

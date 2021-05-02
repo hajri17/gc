@@ -11,16 +11,16 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Review
- * 
+ *
  * @property int $id
  * @property int $stars
  * @property string|null $content
- * @property int|null $item_id
  * @property int|null $user_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
- * @property Item|null $item
+ * @property int $transaction_id
+ *
+ * @property Transaction $transaction
  * @property User|null $user
  *
  * @package App\Models
@@ -31,24 +31,31 @@ class Review extends Model
 
 	protected $casts = [
 		'stars' => 'int',
-		'item_id' => 'int',
-		'user_id' => 'int'
+		'user_id' => 'int',
+        'item_id' => 'int',
+		'transaction_id' => 'int'
 	];
 
 	protected $fillable = [
 		'stars',
 		'content',
-		'item_id',
-		'user_id'
+		'user_id',
+        'item_id',
+		'transaction_id'
 	];
 
-	public function item()
+	public function transaction()
 	{
-		return $this->belongsTo(Item::class);
+		return $this->belongsTo(Transaction::class);
 	}
 
 	public function user()
 	{
 		return $this->belongsTo(User::class);
+	}
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
 	}
 }

@@ -100,6 +100,7 @@
                                     <thead>
                                     <tr>
                                         <th>Product</th>
+                                        <th>Qty</th>
                                         <th>Total</th>
                                     </tr>
                                     </thead>
@@ -108,32 +109,22 @@
                                     @foreach($carts as $cart)
                                         <tr>
                                             <td><a href="#">{{ $cart->item->name }}</a></td>
-                                            <td>Rp{{ number_format($cart->item->price, 0, ',', '.') }}</td>
+                                            <td>{{ $cart->qty }}</td>
+                                            <td>Rp{{ number_format($cart->item->price * $cart->qty, 0, ',', '.') }}</td>
                                         </tr>
                                     @endforeach
                                     <tr class="summary-subtotal">
                                         <td>Subtotal:</td>
-                                        <td>Rp{{ number_format($cartTotal, 0, ',', '.') }}</td>
+                                        <td colspan="2">Rp{{ number_format($cartTotal, 0, ',', '.') }}</td>
                                     </tr><!-- End .summary-subtotal -->
                                     <tr>
                                         <td>Shipping:</td>
-                                        @switch($shipping)
-                                            @case('free-shipping')
-                                            <td>Free Shipping</td>
-                                            <input type="hidden" name="shipping" value="Free Shipping">
-                                            @break
-                                            @case('express-shipping')
-                                            <td>Express Shipping</td>
-                                            <input type="hidden" name="shipping" value="Express Shipping">
-                                            @break
-                                            @default
-                                            <td>Standard Shipping</td>
-                                            <input type="hidden" name="shipping" value="Standard Shipping">
-                                        @endswitch
+                                        <td colspan="2" class="text-right">{{ $shipping->name }} Shipping</td>
+                                        <input type="hidden" name="shipping_method_id" value="{{ $shipping->id }}">
                                     </tr>
                                     <tr class="summary-total">
                                         <td>Total:</td>
-                                        <td>Rp{{ number_format($total, 0, ',', '.') }}</td>
+                                        <td colspan="2">Rp{{ number_format($total, 0, ',', '.') }}</td>
                                     </tr><!-- End .summary-total -->
                                     </tbody>
                                 </table><!-- End .table table-summary -->
